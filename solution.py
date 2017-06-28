@@ -50,22 +50,24 @@ def naked_twins(values):
     # Find naked_twins
     for box1 in two_value_boxes:
         for box2 in peers[box1]:
-            if values[box1] == values[box2]:
+            if box1 < box2 and values[box1] == values[box2]:
                 naked_ts.append([box1,box2])
 
-    visited = set()
-    for twin in naked_ts:
-        box1 = twin[0]
-        box2 = twin[1]
-        peers1 = peers[box1]
-        peers2 = peers[box2]
-        # Find intersect
-        for peer1 in peers1:
-            if peer1 in peers2:
-                    if (len(values[peer1])) > 2:
-                        for value in values[box1]:
-                            values = assign_value(values, peer1, values[peer1].replace(value, ""))
+
+    for naked_twin in naked_ts:
+    # Find intersection
+        units = []
+        for unit in unitlist:
+            if naked_twin[0] in unit and naked_twin[1] in unit:
+                units.append(unit)
+
+        for unit in units:
+            for box in unit:
+                if box != naked_twin[0] and box != naked_twin[1]:
+                    assign_value(values, box, values[box].replace(values[naked_twin[0]][0], ''))
+                    assign_value(values, box, values[box].replace(values[naked_twin[0]][1], ''))
     return values
+
 
 def display(values):
     """
